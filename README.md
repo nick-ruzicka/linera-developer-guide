@@ -29,6 +29,7 @@ cp -r linera-developer-guide/skills/linera-markets .claude/skills/
 ### Use the Shell Toolkit
 
 ```bash
+cd linera-developer-guide
 source scripts/linera-api.sh
 query_market_state
 place_prediction HIGHER "20.00000000"
