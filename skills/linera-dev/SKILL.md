@@ -1,6 +1,6 @@
 ---
 name: linera-dev
-description: Build real-time Web3 applications on Linera using Rust, linera-sdk, linera-views, and GraphQL. Covers on-chain contracts, services, microchains, cross-chain messaging, and MCP integration.
+description: Use when writing Rust code for Linera, deploying to Linera testnet, building GraphQL services on microchains, debugging linera-sdk compilation errors, or implementing cross-chain messaging.
 user-invocable: true
 ---
 
@@ -538,16 +538,16 @@ Get IDs from: `linera wallet show`
 - **Inbox**: Cross-chain messages arrive in inbox; must be explicitly processed.
 - **Fast Rounds**: Super owners can propose with minimal latency.
 
-## Sub-Skills
+## Reference Files
 
-For detailed patterns, see:
+Read these when you need deeper coverage on a specific topic:
 
-- [storage-views.md](./storage-views.md) - Storage patterns and view types
-- [cross-chain-messaging.md](./cross-chain-messaging.md) - Advanced messaging patterns
-- [mcp-integration.md](./mcp-integration.md) - Full MCP setup guide
-- [testing.md](./testing.md) - Unit and integration testing
-- [deployment.md](./deployment.md) - Testnet and production deployment
-- [scaling.md](./scaling.md) - Scaling across multiple wallets/processes
+- If you need to **persist complex state**, read [storage-views.md](./storage-views.md) — all view types, GraphQL integration, anti-patterns
+- If you need to **send messages between chains**, read [cross-chain-messaging.md](./cross-chain-messaging.md) — transfers, subscriptions, bounce handling
+- If you need to **connect an AI assistant** to a Linera app, read [mcp-integration.md](./mcp-integration.md) — Apollo MCP Server setup for Claude Desktop
+- If you need to **write tests**, read [testing.md](./testing.md) — unit, service, contract, cross-chain, and integration tests
+- If you need to **deploy to testnet** or run locally, read [deployment.md](./deployment.md) — local dev, Conway testnet, multi-chain setups
+- If you hit **GRPC errors with many chains**, read [scaling.md](./scaling.md) — multi-wallet partitioning pattern
 
 ## Quick Reference
 

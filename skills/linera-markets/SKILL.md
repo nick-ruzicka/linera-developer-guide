@@ -1,6 +1,6 @@
 ---
 name: linera-markets
-description: Interact with Linera prediction markets. Query markets, place predictions, check positions, read results.
+description: Use when querying Linera prediction market state, placing bets via GraphQL, checking token balances, tracking positions, or debugging parimutuel market interactions.
 ---
 
 # Linera Markets — Developer Guide
@@ -296,9 +296,15 @@ close_all_contracts 42
 | (redeem YES) | `YesAsk` | YES | Sell YES tokens back after resolution |
 | (redeem NO) | `NoAsk` | NO | Sell NO tokens back after resolution |
 
-## GraphQL Reference
+## Reference Files
 
-See `api-reference.md` for complete query and mutation examples with sample responses.
+Read these when you need deeper coverage on a specific topic:
+
+- If you need **complete GraphQL queries and responses**, read [api-reference.md](./api-reference.md) — every endpoint with sample payloads
+- If you need to **fund chains with native tokens**, read [faucet-claims.md](./faucet-claims.md) — step-by-step faucet claiming, batch claiming, temp wallets
+- If you need to **run multiple wallets or environments**, read [multi-wallet-setup.md](./multi-wallet-setup.md) — devnet+prod coexistence, env vars, read-only chain access
+- If you need to **understand generation timing**, read [resolution-timing.md](./resolution-timing.md) — when markets open/close/resolve, stale state pitfalls, agent timing patterns
+- If you hit **RocksDB lock errors**, read [rocksdb-locking.md](./rocksdb-locking.md) — three patterns for working around the exclusive lock
 
 ## Troubleshooting
 
