@@ -2,11 +2,10 @@
 
 | Component | Version | Notes |
 |-----------|---------|-------|
-| linera-sdk | 0.15 | Match to your Linera CLI version |
+| Linera SDK (includes CLI) | 0.15.15 | Check [linera.dev](https://linera.dev) for latest. Install: `cargo install linera-service linera-storage-service` |
 | Rust | 1.86.0 | Pin via rust-toolchain.toml |
 | Testnet branch | testnet_conway | Current active testnet |
 | protoc | 21.x | Not 28+ |
-| Linera CLI | 0.15.8 | `cargo install linera-service linera-storage-service` |
 | async-graphql | 7.0 | Use `default-features = false` |
 
 Last updated: 2026-03-17
