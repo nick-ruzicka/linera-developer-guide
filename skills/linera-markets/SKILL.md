@@ -5,6 +5,8 @@ description: Interact with Linera prediction markets. Query markets, place predi
 
 # Linera Markets — Developer Guide
 
+> **Versions:** This guide targets the versions listed in [VERSIONS.md](../../VERSIONS.md). Check there for the latest supported configuration.
+
 A guide for developers who want to interact with **Linera Markets** programmatically — a real-time prediction market platform on the Linera blockchain.
 
 ## How Linera Markets Works

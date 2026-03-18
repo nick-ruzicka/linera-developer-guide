@@ -6,6 +6,8 @@ user-invocable: true
 
 # Linera Development Skill
 
+> **Versions:** This guide targets the versions listed in [VERSIONS.md](../../VERSIONS.md). Check there for the latest supported configuration.
+
 Use this skill for building decentralized applications on Linera—a protocol designed for real-time Web3 applications with microchain architecture.
 
 ## When to Use
