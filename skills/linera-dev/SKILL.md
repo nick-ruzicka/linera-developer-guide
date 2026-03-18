@@ -134,10 +134,10 @@ End-to-end sequence for building a Linera app. Each step references the detailed
 
 1. **Create project directory and `Cargo.toml`** — use the template in "Application Structure" above. Two `[[bin]]` targets: `<name>_contract` and `<name>_service`.
 2. **Add `rust-toolchain.toml`** — pin Rust 1.86.0 with `wasm32-unknown-unknown` target. See "Prerequisites > Required Versions".
-3. **Define ABI in `src/lib.rs`** — declare `Operation`, `Message` enums and implement `ContractAbi` + `ServiceAbi`. See "Define ABI" below.
+3. **Define ABI in `src/lib.rs`** — declare `Operation` (with `#[derive(GraphQLMutationRoot)]`), `Message` enums and implement `ContractAbi` + `ServiceAbi`. See "Define ABI" below.
 4. **Define state in `src/state.rs`** — derive `RootView` and `SimpleObject`, use `RegisterView`/`MapView` for persistent fields. See "Define State" below.
 5. **Implement contract in `src/contract.rs`** — implement the `Contract` trait (`load`, `instantiate`, `execute_operation`, `execute_message`, `store`). See "Implement Contract" below.
-6. **Implement service in `src/service.rs`** — implement the `Service` trait, build a GraphQL schema with query root (state) and mutation root. See "Implement Service" below.
+6. **Implement service in `src/service.rs`** — implement the `Service` trait, build a GraphQL schema with query root (state) and `Operation::mutation_root()`. See "Implement Service" below.
 7. **Build** — `cargo build --release --target wasm32-unknown-unknown`
 8. **Start local services** — run `linera-storage-service` (local dev only), then `linera wallet init --with-new-chain` and `linera service --port 8080`. See "Build, Deploy, Test" below.
 9. **Deploy** — `linera project publish-and-create . --json-argument '<INIT_ARG>'`
@@ -150,10 +150,11 @@ End-to-end sequence for building a Linera app. Each step references the detailed
 ```rust
 use async_graphql::{Request, Response};
 use linera_sdk::base::{ContractAbi, ServiceAbi};
+use linera_sdk::graphql::GraphQLMutationRoot;
 use serde::{Deserialize, Serialize};
 
-// Operations users can perform
-#[derive(Debug, Deserialize, Serialize)]
+// Operations — automatically exposed as GraphQL mutations via derive
+#[derive(Debug, Deserialize, Serialize, GraphQLMutationRoot)]
 pub enum Operation {
     DoSomething { value: u64 },
 }
@@ -270,9 +271,13 @@ impl Contract for MyAppContract {
 #![cfg_attr(target_arch = "wasm32", no_main)]
 
 use std::sync::Arc;
-use async_graphql::{EmptySubscription, Object, Schema};
-use linera_sdk::{base::WithServiceAbi, Service, ServiceRuntime};
-use my_app::MyAppAbi;
+use async_graphql::{EmptySubscription, Request, Response, Schema};
+use linera_sdk::{
+    graphql::GraphQLMutationRoot as _,
+    base::WithServiceAbi,
+    Service, ServiceRuntime,
+};
+use my_app::{MyAppAbi, Operation};
 
 pub struct MyAppService {
     state: Arc<MyAppState>,
@@ -301,26 +306,23 @@ impl Service for MyAppService {
     async fn handle_query(&self, request: Request) -> Response {
         let schema = Schema::build(
             self.state.clone(),
-            MutationRoot { runtime: self.runtime.clone() },
+            Operation::mutation_root(self.runtime.clone()),
             EmptySubscription,
         )
         .finish();
         schema.execute(request).await
     }
 }
-
-struct MutationRoot {
-    runtime: Arc<ServiceRuntime<MyAppService>>,
-}
-
-#[Object]
-impl MutationRoot {
-    async fn do_something(&self, value: u64) -> Vec<u8> {
-        self.runtime.schedule_operation(&Operation::DoSomething { value });
-        vec![]
-    }
-}
 ```
+
+`#[derive(GraphQLMutationRoot)]` on the `Operation` enum (in lib.rs) automatically exposes
+all variants as GraphQL mutations. No manual `MutationRoot` struct needed.
+
+**Adding custom mutation methods:** Use `#[ComplexObject]` on your state type in service.rs
+to add query methods beyond what the derive provides. If custom methods need the runtime,
+pass it as a `Context` value via `.data(self.runtime.clone())` on the schema builder.
+See the [hex-game example](https://github.com/linera-io/linera-protocol/blob/main/examples/hex-game/src/service.rs)
+for a complete reference.
 
 ## Cross-Chain Messaging
 
