@@ -336,10 +336,26 @@ self.runtime
     .send_to(target_chain);
 ```
 
-Handle received messages in `execute_message`. Use `.with_tracking()` for automatic
-bounce handling.
+Handle received messages in `execute_message`. **Important:** When using `.with_tracking()`,
+the receiver must handle bounced messages correctly using `self.runtime.message_is_bouncing()`
+to distinguish an original message from a bouncing one — typically to refund the sender:
 
-For subscription patterns, token transfers, and bounce handling, see
+```rust
+async fn execute_message(&mut self, message: Message) {
+    match message {
+        Message::Credit { amount, target, source } => {
+            if self.runtime.message_is_bouncing() {
+                // Message delivery failed — refund source
+                self.credit_account(&source, amount).await;
+            } else {
+                self.credit_account(&target, amount).await;
+            }
+        }
+    }
+}
+```
+
+For subscription patterns, token transfers, and more messaging patterns, see
 [cross-chain-messaging.md](./cross-chain-messaging.md).
 
 ## Build, Deploy, Test
@@ -388,6 +404,13 @@ curl http://localhost:8080/chains/<CHAIN_ID>/applications/<APP_ID> \
 ```
 
 ## GraphQL Patterns
+
+### Scalars and Rust Enums
+
+GraphQL does not natively support Rust enums. Linera represents complex types as GraphQL
+scalars — monolithic JSON values with no field selection and snake-case field identifiers.
+Use `scalar!` to declare them, or `linera_base::graphql::doc_scalar` for scalars with
+attached documentation.
 
 ### Query State
 
