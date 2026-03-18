@@ -15,7 +15,7 @@ Without this guide, 0 of 4 AI-generated Linera application files compile against
 ### Install as Claude Code Skills
 
 ```bash
-git clone https://github.com/<org>/linera-developer-guide.git
+git clone https://github.com/nick-ruzicka/linera-developer-guide.git
 
 # Personal install (available in all projects):
 cp -r linera-developer-guide/skills/linera-dev ~/.claude/skills/
